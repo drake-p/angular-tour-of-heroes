@@ -8,7 +8,6 @@ import { CardService } from './card/card.service';
     <board-state></board-state>
     <analyzed-output></analyzed-output>
     <key-permanents></key-permanents>
-    <small class="text-muted font-italic">Cards marked with a * contain a letter that appears only once.</small>
     `,
 })
 

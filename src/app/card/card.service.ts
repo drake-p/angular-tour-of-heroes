@@ -4,14 +4,6 @@ import { EventEmitter } from '@angular/core';
 import { Card } from './card';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const KEYS = {
-  0: '0',
-  1: '1',
-  2: '2-4',
-  3: '2-4',
-  4: '2-4',
-  5: '5+',
-};
 
 @Injectable()
 export class CardService {
@@ -62,8 +54,8 @@ export class CardService {
     return keyCards;
   }
 
-  getFrequencies(): Object[] {
-    let frequencies = {'0': '', '1': '', '2-4': '', '5+': ''};
+  getFrequencies(): string[] {
+    let frequencies: string[] = ['', ''];
     let letterCounts = this.count();
 
     // check whether we have all 26 letters
@@ -71,11 +63,12 @@ export class CardService {
 
     // group letters by frequency
     for (let letter in letterCounts) {
-      let key = KEYS[letterCounts[letter]] || KEYS[5];
-      frequencies[key] += letter + ' ';
+      if (letterCounts[letter] <= 1) {
+        frequencies[letterCounts[letter]] += letter + ' ';
+      }
     };
 
-    return this.format(frequencies);
+    return frequencies;
   }
 
   count(): Object {
@@ -98,23 +91,6 @@ export class CardService {
     });
 
     return letterCounts;
-  }
-
-  format(frequencies: Object): Object[] {
-    let formatted: Object[];
-    formatted = [];
-
-    // take {'0': '', '1': ''} and make [{'label': '0', 'letters': ''}, {'label': '1', 'letters': ''}]
-    for (let key in frequencies) {
-      if (frequencies[key]) {
-        formatted.push({
-          label: key,
-          letters: frequencies[key]
-        });
-      }
-    }
-
-    return formatted;
   }
 
   isWin(letterCounts: Object): number {

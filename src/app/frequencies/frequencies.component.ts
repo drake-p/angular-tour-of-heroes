@@ -9,24 +9,21 @@ const TEXT_NO = 'Not quite yet!';
 @Component({
   selector: 'analyzed-output',
   template: `
-  <div class="py-2">
-    <h2 *ngIf="cardService.win !== undefined">
+  <div *ngIf="cardService.win !== undefined" class="py-2">
+    <h2 [class.text-success]="cardService.win">
       {{cardService.win ? text_yes : text_no}}
-      <small *ngIf="!cardService.win">
-        You still need {{frequencies[0].letters.length / 2}} more letters:
+      <small *ngIf="frequencies[0].length">
+        You still need {{frequencies[0].length / 2}} more letters:
+        <div class="text-danger py-1">{{frequencies[0]}}</div>
       </small>
     </h2>
-    <table class="table table-bordered table-sm">
-      <tbody>
-        <tr *ngFor="let freq of frequencies"
-          [class.text-danger]="freq.label === '0'"
-          [class.text-success]="cardService.win"
-          >
-          <th>{{freq.label}}</th>
-          <td>{{freq.letters}}</td>
-        </tr>
-      </tbody>
-    </table>
+
+    <h3 *ngIf="frequencies[1].length" class="pt-2">
+      You only have 1 of each of these letters:
+      <br>
+      <small class="text-warning">{{frequencies[1]}}</small>
+    </h3>
+    <small class="text-muted">Card names with unique letters are marked with an asterisk (*).</small>
   </div>
   `
 })
@@ -37,7 +34,7 @@ export class FrequenciesComponent implements OnInit {
   text_yes = TEXT_YES;
   text_no = TEXT_NO;
 
-  frequencies: Object[] = [];
+  frequencies: string[] = [];
 
   getFrequencies(): void {
     this.frequencies = this.cardService.getFrequencies();
