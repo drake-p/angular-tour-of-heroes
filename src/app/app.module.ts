@@ -3,10 +3,11 @@ import { FormsModule }   from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent }  from './app.component';
-import { AnalyzedOutputComponent } from './analyzed-output.component';
-import { BoardStateComponent } from './board-state.component';
+import { BoardStateComponent } from './board-state/board-state.component';
+import { FrequenciesComponent } from './frequencies/frequencies.component';
+import { KeyPermanentsComponent } from './key-permanents/key-permanents.component';
 
-import { CardService } from './card.service';
+import { CardService } from './card/card.service';
 
 @NgModule({
   imports:      [
@@ -15,8 +16,9 @@ import { CardService } from './card.service';
   ],
   declarations: [
     AppComponent,
-    AnalyzedOutputComponent,
     BoardStateComponent,
+    FrequenciesComponent,
+    KeyPermanentsComponent,
   ],
   bootstrap:    [ AppComponent ],
   providers: [ CardService ]

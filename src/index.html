@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="/">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css">
 
     <!-- Polyfill(s) for older browsers -->
     <script src="node_modules/core-js/client/shim.min.js"></script>
@@ -20,9 +21,14 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container py-4">
       <div class="row">
-        <my-app>Just one moment ...</my-app>
+        <div class="col-sm-4 hidden-sm-down">
+          <img src="/now-i-know-my-abcs.jpg" alt="Image of the Magic card, 'Now I Know My ABCs'">
+        </div>
+        <div class="col-sm-8">
+          <my-app>Just one moment ...</my-app>
+        </div>
       </div>
     </div>
   </body>

@@ -17,6 +17,7 @@ const KEYS = {
 export class CardService {
   cards: Card[] = [];
   emitter: EventEmitter<any> = new EventEmitter();
+  win: number;
 
   getCards(): Card[] {
     return this.cards;
@@ -36,14 +37,39 @@ export class CardService {
     this.emitter.emit(null);
   };
 
-  subscribe(callback) {
+  subscribe(callback: any): void {
     this.emitter.subscribe(callback);
   }
 
-  getFrequencies(): Object {
+  getKeyPermanents(): Card[] {
+    let keyCards: Card[] = [];
+    let keyLetters: string[] = [];
+
+    let letterCounts = this.count();
+
+    for (var letter in letterCounts) {
+      if (letterCounts[letter] == 1) {
+        keyLetters.push(letter);
+      }
+    }
+
+    this.cards.forEach((card) => {
+      card.unique = keyLetters.some((letter) => {
+        return card.name.toUpperCase().includes(letter);
+      });
+    });
+
+    return keyCards;
+  }
+
+  getFrequencies(): Object[] {
     let frequencies = {'0': '', '1': '', '2-4': '', '5+': ''};
     let letterCounts = this.count();
 
+    // check whether we have all 26 letters
+    this.win = this.isWin(letterCounts);
+
+    // group letters by frequency
     for (let letter in letterCounts) {
       let key = KEYS[letterCounts[letter]] || KEYS[5];
       frequencies[key] += letter + ' ';
@@ -74,7 +100,7 @@ export class CardService {
     return letterCounts;
   }
 
-  format(frequencies: Object): Object {
+  format(frequencies: Object): Object[] {
     let formatted: Object[];
     formatted = [];
 
@@ -89,5 +115,15 @@ export class CardService {
     }
 
     return formatted;
+  }
+
+  isWin(letterCounts: Object): number {
+    for (let letter in letterCounts) {
+      if (letterCounts[letter] == 0) {
+        return 0;
+      }
+    }
+
+    return 1;
   }
 }
