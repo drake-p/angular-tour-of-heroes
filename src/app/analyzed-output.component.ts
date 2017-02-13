@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { OnInit } from '@angular/core';
+
 import { CardService } from './card.service';
 
 @Component({
@@ -17,11 +19,17 @@ import { CardService } from './card.service';
       </tbody>
     </table>
   </div>
-  `,
-  providers: [CardService]
+  `
 })
 
-export class AnalyzedOutputComponent {
-  constructor(private cardService: CardService) { }
-  frequencies = Object;
+export class AnalyzedOutputComponent implements OnInit {
+  constructor(private cardService: CardService) { };
+  frequencies: Object[] = [];
+
+  getFrequencies(): void {
+    this.frequencies = this.cardService.getFrequencies();
+  };
+  ngOnInit(): void {
+    this.cardService.subscribe(() => { this.getFrequencies() });
+  }
 }

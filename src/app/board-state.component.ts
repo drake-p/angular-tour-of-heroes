@@ -15,8 +15,10 @@ import { CardService } from './card.service';
           <option>Forest</option>
           <option>Now I Know My ABC's</option>
         </select>-->
-        <input placeholder="e.g. Island">
-        <button>+</button>
+        <input #cardName
+          (keyup.enter)="addCard(cardName.value); cardName.value = ''"
+          placeholder="Type a card name...">
+        <button (click)="addCard(cardName.value); cardName.value=''">+</button>
     </li>
     <li *ngFor="let card of getCards()" class="nav-item">
       <button (click)="removeCard(card)">&times;</button>
@@ -25,10 +27,9 @@ import { CardService } from './card.service';
     </li>
     <li class="text-muted" hidden>Cast some spells! Don't forget - lands count too!</li>
   </ul>
-  Remove All: <button>Creatures</button> <button>Enchantments</button> <button>Artifacts</button> <button>Lands</button> <button>Planeswalkers</button> <br>
-  <button>Remove Everything :(</button>
+  <!--Remove All: <button>Creatures</button> <button>Enchantments</button> <button>Artifacts</button> <button>Lands</button> <button>Planeswalkers</button> <br>
+  <button>Remove Everything :(</button>-->
   `,
-  providers: [CardService]
 })
 
 export class BoardStateComponent {
@@ -37,7 +38,9 @@ export class BoardStateComponent {
     return this.cardService.getCards();
   };
   addCard(cardName: string): void {
-    this.cardService.addCard(card);
+    if (cardName) {
+      this.cardService.addCard(cardName);
+    }
   };
   removeCard(card: Card): void {
     this.cardService.removeCard(card);

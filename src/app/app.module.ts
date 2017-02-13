@@ -1,10 +1,12 @@
 import { NgModule }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent }  from './app.component';
 import { AnalyzedOutputComponent } from './analyzed-output.component';
 import { BoardStateComponent } from './board-state.component';
+
+import { CardService } from './card.service';
 
 @NgModule({
   imports:      [
@@ -16,6 +18,7 @@ import { BoardStateComponent } from './board-state.component';
     AnalyzedOutputComponent,
     BoardStateComponent,
   ],
-  bootstrap:    [ AppComponent ]
+  bootstrap:    [ AppComponent ],
+  providers: [ CardService ]
 })
 export class AppModule { }

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+
 import { Card } from './card';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 const KEYS = {
   0: '0',
   1: '1',
@@ -12,64 +13,58 @@ const KEYS = {
   5: '5+',
 };
 
-const CARDS: Card[] = [
-  { id: 11, name: 'Island', types: ['land'] },
-  { id: 12, name: 'Forest', types: ['land'] },
-  { id: 13, name: 'Mountain', types: ['land'] },
-  { id: 14, name: 'Plains', types: ['land'] },
-  { id: 15, name: 'Swamp', types: ['land'] },
-  { id: 16, name: 'Now I Know My ABC\'s', types: ['enchantment'] }
-];
-
 @Injectable()
 export class CardService {
-  cards = CARDS;
-  // cards: Card[];
-
-  frequencies: Object;
+  cards: Card[] = [];
+  emitter: EventEmitter<any> = new EventEmitter();
 
   getCards(): Card[] {
     return this.cards;
   };
 
-  addCard(card: Card): void { };
+  addCard(cardName: string): void {
+    this.cards.push(<Card>{id: 0, name: cardName, types: []});
+    this.cards.sort((a, b) => {
+      return a.name > b.name ? +1 : -1;
+    });
+    this.emitter.emit(null);
+  };
 
   removeCard(card: Card): void {
     var index = this.cards.indexOf(card);
     this.cards.splice(index, 1);
-    this.frequencies = this.getFrequencies();
+    this.emitter.emit(null);
   };
+
+  subscribe(callback) {
+    this.emitter.subscribe(callback);
+  }
 
   getFrequencies(): Object {
     let frequencies = {'0': '', '1': '', '2-4': '', '5+': ''};
+    let letterCounts = this.count();
 
-    let letterCounts = this.getLetterCounts();
     for (let letter in letterCounts) {
-      frequencies[KEYS[letterCounts[letter]] || KEYS[5]] += letter + ' ';
+      let key = KEYS[letterCounts[letter]] || KEYS[5];
+      frequencies[key] += letter + ' ';
     };
 
-    let transformed: Object[];
-    transformed = [];
-
-    for (let key in frequencies) {
-      transformed.push({
-        label: key,
-        letters: frequencies[key]
-      });
-    }
-
-    return transformed;
+    return this.format(frequencies);
   }
 
-  getLetterCounts(): Object {
+  count(): Object {
     let letterCounts = {};
 
+    // make a hash like {A: 0, B: 0, C: 0, ...}
     Array.from(ALPHABET, (letter, i) => {
       letterCounts[letter] = 0;
     });
 
+    // tally up the letters in each card name
     this.getCards().forEach((card: Card) => {
       Array.from(card.name.toUpperCase()).forEach((letter: string) => {
+
+        // don't worry about non-alphabetic characters; they don't count
         if (letterCounts[letter] != undefined) {
           letterCounts[letter]++;
         }
@@ -77,5 +72,22 @@ export class CardService {
     });
 
     return letterCounts;
+  }
+
+  format(frequencies: Object): Object {
+    let formatted: Object[];
+    formatted = [];
+
+    // take {'0': '', '1': ''} and make [{'label': '0', 'letters': ''}, {'label': '1', 'letters': ''}]
+    for (let key in frequencies) {
+      if (frequencies[key]) {
+        formatted.push({
+          label: key,
+          letters: frequencies[key]
+        });
+      }
+    }
+
+    return formatted;
   }
 }

@@ -5,10 +5,9 @@ import { CardService } from './card.service';
   selector: 'my-app',
   template: `
     <h1>{{title}}</h1>
-    <board-state></board-state>
+    <board-state class="py-4" style="display: block;"></board-state>
     <analyzed-output></analyzed-output>
     `,
-    providers: [CardService]
 })
 
 export class AppComponent  {
